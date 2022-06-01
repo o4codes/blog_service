@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = config("DATABASE_URL", cast=str, default="mongodb://localhost:27017")
     DATABASE_NAME: str = "o4codes-blog"
     SUBSCRIBER_COLLECTION: str = "subscribers"
+    RSS_PROVIDER_COLLECTION: str = "rss_providers"
 
     PROJECT_NAME : str = "o4codes-blog-API"
     PROJECT_DESCRIPTION : str = "o4codes blog API"

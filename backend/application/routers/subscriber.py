@@ -1,13 +1,13 @@
 from typing import List
-from fastapi import Depends, status
+from fastapi import Body, Depends, status
 from fastapi.routing import APIRouter
 from fastapi.responses import JSONResponse
+from pydantic import EmailStr
 
 from core.dependencies import get_database
 from core.exception_handler import AppExceptionHandler
 from services.subscriber import SubscriberService
 from models.subscriber import Subscriber
-from application.schema.subscriber import SubscriberCreateModel
 
 router = APIRouter(prefix="/subscribers", tags=["SUBSCRIBER"])
 
@@ -31,11 +31,11 @@ async def get_subscriber(id: str, database: str = Depends(get_database)):
         AppExceptionHandler(e).raiseException()
 
 @router.post("/", response_model=Subscriber, status_code=status.HTTP_201_CREATED)
-async def create_subscriber(subscriber: SubscriberCreateModel, database: str = Depends(get_database)):
+async def create_subscriber(email: EmailStr = Body(...), database: str = Depends(get_database)):
     """ Create subscriber
     """
     try:
-        return await SubscriberService(database).create(subscriber)
+        return await SubscriberService(database).create(email)
     except Exception as e:
         AppExceptionHandler(e).raiseException()
 

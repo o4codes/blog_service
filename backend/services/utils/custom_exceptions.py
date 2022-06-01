@@ -31,4 +31,16 @@ class ExistingDataException(Exception):
         self.message = message
 
     def __str__(self):
-        return self.message 
+        return self.message
+
+
+class BadRequest(Exception):
+    """
+    Exception for when a request is bad
+    """
+    
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message

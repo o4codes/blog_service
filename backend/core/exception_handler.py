@@ -22,5 +22,8 @@ class AppExceptionHandler:
         if isinstance(exception, InvalidId):
             self.status_code = status.HTTP_400_BAD_REQUEST
 
+        if isinstance(exception, BadRequest):
+            self.status_code = status.HTTP_400_BAD_REQUEST
+
     def raiseException(self):
         raise HTTPException(status_code=self.status_code, detail=self.message)

@@ -1,4 +1,3 @@
-from uuid import UUID
 from core.config import settings
 from typing import List
 from bson import ObjectId
@@ -79,8 +78,8 @@ class DBSubscriber:
         Returns:
             Subscriber: created subscriber
         """
-        await self.collection.insert_one(subscriber.dict())
-        subscriber = await self.get_by_email(subscriber.email)
+        result = await self.collection.insert_one(subscriber.dict(exclude={'id'}))
+        subscriber = await self.get_by_id(result.inserted_id)
         return subscriber
 
 
@@ -96,13 +95,13 @@ class DBSubscriber:
         """
         await self.collection.update_one(
             {"_id": ObjectId(id)}, 
-            {"$set": subscriber.dict(exclude=["id"])}
+            {"$set": subscriber.dict(exclude={"id"})}
             )
         subscriber = await self.get_by_id(id)
         return subscriber
 
 
-    async def delete(self, id: UUID) -> bool:
+    async def delete(self, id: str) -> bool:
         """ Deletes a subscriber
 
         Args:
@@ -111,8 +110,5 @@ class DBSubscriber:
         Returns:
             bool: True if deleted, False if not
         """
-        subscriber = await self.get_by_id(id)
-        if subscriber:
-            result = await self.collection.delete_one({"_id": ObjectId(id)})
-            return result.deleted_count > 0
-        return False
+        result = await self.collection.delete_one({"_id": ObjectId(id)})
+        return result.deleted_count > 0
