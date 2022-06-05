@@ -1,11 +1,12 @@
 from bson import ObjectId
-from pydantic import AnyUrl, BaseModel, EmailStr, Field
 from models.utils.custom_type import PyObjectId
+from pydantic import AnyUrl, BaseModel, EmailStr, Field
+
 
 class RssProvider(BaseModel):
-    """ Model of RSS providers
-    """
-    id : PyObjectId = Field(default_factory=PyObjectId)
+    """Model of RSS providers"""
+
+    id: PyObjectId = Field(default_factory=PyObjectId)
     url: AnyUrl
     title: str
     description: str
