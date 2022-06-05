@@ -16,6 +16,7 @@ class RssProviderService:
         self.db = db
         self.rss_provider_db = RssProviderDatabase(db)
 
+
     async def list(self, **query) -> List[RssProvider]:
         """Gets a list of all rss providers
 
@@ -28,6 +29,7 @@ class RssProviderService:
         rss_providers = await self.rss_provider_db.list(**query)
         return rss_providers
 
+
     async def count(self, **query) -> int:
         """Gets the count of rss providers
 
@@ -39,7 +41,8 @@ class RssProviderService:
         """
         return await self.rss_provider_db.count(**query)
 
-    async def get_by_id(self, provider_id: str) -> RssProvider:
+
+    async def get_by_id(self, id: str) -> RssProvider:
         """
         Gets a rss provider by id
 
@@ -50,10 +53,11 @@ class RssProviderService:
             RssProvider: rss provider
             None: if no rss provider found
         """
-        rss_provider = await self.rss_provider_db.get_by_id(provider_id)
+        rss_provider = await self.rss_provider_db.get_by_id(id)
         if rss_provider:
             return rss_provider
-        raise NotFoundException(f"Rss provider with id {provider_id} not found")
+        raise NotFoundException(f"Rss provider with id {id} not found")
+
 
     async def create(self, url: str) -> RssProvider:
         """
@@ -78,7 +82,8 @@ class RssProviderService:
             raise DatabaseException("Error creating rss provider")
         raise ExistingDataException(f"Rss provider with url '{url}' already exists")
 
-    async def update(self, provider_id: str, url: str) -> RssProvider:
+
+    async def update(self, id: str, url: str) -> RssProvider:
         """
         Updates a rss provider
 
@@ -89,14 +94,15 @@ class RssProviderService:
         Returns:
             RssProvider: rss provider
         """
-        rss_provider = await self.rss_provider_db.get_by_id(provider_id)
+        rss_provider = await self.rss_provider_db.get_by_id(id)
         if rss_provider:
             rss_provider.url = url
             rss_provider = await self.rss_provider_db.update(rss_provider)
             return rss_provider
-        raise NotFoundException(f"Rss provider with id {provider_id} not found")
+        raise NotFoundException(f"Rss provider with id {id} not found")
 
-    async def delete(self, provider_id: str) -> RssProvider:
+
+    async def delete(self, id: str) -> RssProvider:
         """
         Deletes a rss provider
 
@@ -106,10 +112,10 @@ class RssProviderService:
         Returns:
             RssProvider: rss provider
         """
-        rss_provider = await self.rss_provider_db.get_by_id(provider_id)
+        rss_provider = await self.rss_provider_db.get_by_id(id)
         if rss_provider:
             result = await self.rss_provider_db.delete(rss_provider)
             if result:
                 return rss_provider
             raise DatabaseException("Error deleting rss provider")
-        raise NotFoundException(f"Rss provider with id {provider_id} not found")
+        raise NotFoundException(f"Rss provider with id {id} not found")
