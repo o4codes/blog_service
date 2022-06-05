@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     DATABASE_NAME: str = "o4codes-blog"
     SUBSCRIBER_COLLECTION: str = "subscribers"
     RSS_PROVIDER_COLLECTION: str = "rss_providers"
+    RSS_FEEDS_COLLECTION: str = "rss_feeds"
 
     PROJECT_NAME: str = "o4codes-blog-API"
     PROJECT_DESCRIPTION: str = "o4codes blog API"

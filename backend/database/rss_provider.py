@@ -12,6 +12,7 @@ class RssProviderDatabase:
         self.db = db
         self.collection = self.db[settings.RSS_PROVIDER_COLLECTION]
 
+
     async def list(self, **query) -> List[RssProvider]:
         """Gets a list of all rss providers
 
@@ -28,6 +29,7 @@ class RssProviderDatabase:
         ]
         return rss_providers
 
+
     async def count(self, **query) -> int:
         """Gets the count of rss providers
 
@@ -38,6 +40,7 @@ class RssProviderDatabase:
             int: count of subscribers
         """
         return await self.collection.count_documents(query)
+
 
     async def get_by_id(self, provider_id: str) -> RssProvider:
         """
@@ -55,6 +58,7 @@ class RssProviderDatabase:
             return RssProvider(**rss_provider, id=rss_provider["_id"])
         return None
 
+
     async def get_by_url(self, url: str) -> RssProvider:
         """
         Gets a rss provider by url
@@ -71,6 +75,7 @@ class RssProviderDatabase:
             return RssProvider(**rss_provider, id=rss_provider["_id"])
         return None
 
+
     async def create(self, rss_provider: RssProvider) -> RssProvider:
         """
         Creates a rss provider
@@ -84,6 +89,7 @@ class RssProviderDatabase:
         result = await self.collection.insert_one(rss_provider.dict(exclude={"id"}))
         rss_provider = await self.get_by_id(result.inserted_id)
         return rss_provider
+
 
     async def update(self, provider_id: str, rss_provider: RssProvider) -> RssProvider:
         """
@@ -101,6 +107,7 @@ class RssProviderDatabase:
         )
         rss_provider = await self.get_by_id(id)
         return rss_provider
+
 
     async def delete(self, provider_id: str) -> bool:
         """
