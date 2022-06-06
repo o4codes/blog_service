@@ -75,6 +75,23 @@ class RssProviderDatabase:
             return RssProvider(**rss_provider, id=rss_provider["_id"])
         return None
 
+    async def search_by_name(self, name: str) -> List[RssProvider]:
+        """
+        Searches for rss providers by name
+
+        Args:
+            name (str): name of rss provider
+
+        Returns:
+            List[RssProvider]: list of rss providers
+        """
+        rss_providers = await self.collection.find({"name": {"$regex": f"/{name}$/i"}}).to_list(None)
+        rss_providers = [
+            RssProvider(**rss_provider, id=rss_provider["_id"])
+            for rss_provider in rss_providers
+        ]
+        return rss_providers
+
 
     async def create(self, rss_provider: RssProvider) -> RssProvider:
         """

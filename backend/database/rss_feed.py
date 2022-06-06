@@ -76,6 +76,22 @@ class RssFeedDatabase:
         ]
         return rss_feeds
 
+    async def get_by_url(self, url: str) -> RssFeed:
+        """
+        Gets a rss feed by url
+            
+        Args:
+            url (str): url of rss feed
+                
+        Returns:
+            RssFeed: rss feed
+            None: if no rss feed found
+        """
+        rss_feed = await self.collection.find_one({"link": url})
+        if rss_feed:
+            return RssFeed(**rss_feed, id=rss_feed["_id"])
+        return None
+
 
     async def create(self, rss_feed: RssFeed) -> RssFeed:
         """

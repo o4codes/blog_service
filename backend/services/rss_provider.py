@@ -58,6 +58,20 @@ class RssProviderService:
             return rss_provider
         raise NotFoundException(f"Rss provider with id {id} not found")
 
+    
+    async def search_by_name(self, name: str) -> List[RssProvider]:
+        """
+        Searches for rss providers by name
+
+        Args:
+            name (str): name of rss provider
+
+        Returns:
+            List[RssProvider]: list of rss providers
+        """
+        rss_providers = await self.rss_provider_db.search_by_name(name)
+        return rss_providers
+
 
     async def create(self, url: str) -> RssProvider:
         """

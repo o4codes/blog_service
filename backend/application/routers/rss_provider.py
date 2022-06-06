@@ -13,7 +13,7 @@ router = APIRouter(prefix="/rss_providers", tags=["RSS_PROVIDER"])
 
 
 @router.get("/", response_model=List[RssProvider])
-async def list_rss_providers(db: AppExceptionHandler = Depends(get_database)):
+async def list_rss_providers(db = Depends(get_database)):
     """Gets a list of all rss providers"""
     rss_provider_service = RssProviderService(db)
     rss_providers = await rss_provider_service.list()
@@ -22,7 +22,7 @@ async def list_rss_providers(db: AppExceptionHandler = Depends(get_database)):
 
 @router.get("/{id}", response_model=RssProvider)
 async def get_rss_provider_by_id(
-    id: str, db: AppExceptionHandler = Depends(get_database)
+    id: str, db = Depends(get_database)
 ):
     """Gets a rss provider by id"""
     try:
@@ -35,7 +35,7 @@ async def get_rss_provider_by_id(
 
 @router.post("/", response_model=RssProvider, status_code=status.HTTP_201_CREATED)
 async def create_rss_provider(
-    url: AnyUrl, db: AppExceptionHandler = Depends(get_database)
+    url: AnyUrl, db = Depends(get_database)
 ):
     """Creates a rss provider"""
     try:
@@ -49,7 +49,7 @@ async def create_rss_provider(
 
 @router.put("/{id}", response_model=RssProvider)
 async def update_rss_provider(
-    id: str, url: AnyUrl, db: AppExceptionHandler = Depends(get_database)
+    id: str, url: AnyUrl, db  = Depends(get_database)
 ):
     """Updates a rss provider"""
     try:
@@ -61,7 +61,7 @@ async def update_rss_provider(
 
 
 @router.delete("/{id}", response_class=JSONResponse)
-async def delete_rss_provider(id: str, db: AppExceptionHandler = Depends(get_database)):
+async def delete_rss_provider(id: str, db = Depends(get_database)):
     """Deletes a rss provider"""
     try:
         await RssProviderService(db).delete(id)

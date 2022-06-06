@@ -13,7 +13,7 @@ class RssFeed(BaseModel):
     link: AnyUrl
     description: str
     published_date: datetime 
-    provider_id = Field(default_factory=PyObjectId)
+    provider_id: PyObjectId = Field(default_factory=PyObjectId)
 
     class Config:
         allow_population_by_field_name = True

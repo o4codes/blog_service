@@ -1,8 +1,14 @@
-from application.routers import rss_provider, subscriber
-from core.config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
+from core.config import settings
+from application.routers import (
+    rss_provider, 
+    subscriber,
+    rss_feed
+)
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -22,6 +28,7 @@ app.add_middleware(
 
 app.include_router(subscriber.router, prefix=settings.API_V1_STR)
 app.include_router(rss_provider.router, prefix=settings.API_V1_STR)
+app.include_router(rss_feed.router, prefix=settings.API_V1_STR)
 
 
 @app.get("/api/v1/ping")
