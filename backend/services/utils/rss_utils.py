@@ -1,6 +1,6 @@
 import aiohttp
 import feedparser
-from services.utils.custom_exceptions import BadRequest
+from core.custom_exceptions import BadRequest
 
 
 class RSSUtils:

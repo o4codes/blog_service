@@ -3,7 +3,7 @@ from typing import List
 from database.subscriber import DBSubscriber
 from models.subscriber import Subscriber
 
-from .utils.custom_exceptions import (
+from core.custom_exceptions import (
     DatabaseException,
     ExistingDataException,
     NotFoundException,

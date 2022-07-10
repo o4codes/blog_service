@@ -1,6 +1,6 @@
 from bson.errors import InvalidId
 from fastapi import HTTPException, status
-from services.utils.custom_exceptions import (
+from core.custom_exceptions import (
     BadRequest,
     DatabaseException,
     ExistingDataException,

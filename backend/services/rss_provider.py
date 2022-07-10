@@ -3,7 +3,7 @@ from typing import List
 from database.rss_provider import RssProviderDatabase
 from models.rss_provider import RssProvider
 
-from services.utils.custom_exceptions import (
+from core.custom_exceptions import (
     DatabaseException,
     ExistingDataException,
     NotFoundException,
