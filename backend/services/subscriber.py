@@ -78,7 +78,7 @@ class SubscriberService:
         raise NotFoundException(f"Subscriber with id {id} not found")
 
 
-    async def create(self, email: str) -> Subscriber:
+    async def create(self, subscriber: Subscriber) -> Subscriber:
         """Creates a subscriber
 
         Args:
@@ -91,11 +91,10 @@ class SubscriberService:
             ExistingDataException: if subscriber with email already exists
             DatabaseException: if failed to create subscriber
         """
-        email_search = await self.subscriber_db.get_by_email(email)
+        email_search = await self.subscriber_db.get_by_email(subscriber.email)
         if email_search:
-            raise ExistingDataException(f"Subscriber with email {email} already exists")
+            raise ExistingDataException(f"Subscriber with email {subscriber.email} already exists")
 
-        subscriber = Subscriber(email=email)
         subscriber = await self.subscriber_db.create(subscriber)
         if subscriber:
             return subscriber

@@ -5,38 +5,41 @@ from fastapi.routing import APIRouter
 from pydantic import EmailStr
 
 from core.dependencies import get_database
+from application.schema.subscriber import SubscriberRequestSchema, SubscriberResponseSchema
 from models.subscriber import Subscriber
 from services.subscriber import SubscriberService
 
 router = APIRouter(prefix="/subscribers", tags=["SUBSCRIBER"])
 
 
-@router.get("/", response_model=List[Subscriber])
+@router.get("/", response_model=List[SubscriberResponseSchema])
 async def get_all_subscribers(database: str = Depends(get_database)):
     """Get all subscribers
     """
     return await SubscriberService(database).list()
 
 
-@router.get("/{id}", response_model=Subscriber)
+@router.get("/{id}", response_model=SubscriberResponseSchema)
 async def get_subscriber(id: str, database: str = Depends(get_database)):
     """Get subscriber by id
     """
-    return await SubscriberService(database).get_by_id(id)
+    subscriber = await SubscriberService(database).get_by_id(id)
+    return SubscriberResponseSchema(**subscriber.dict())
 
 
-@router.post("/", response_model=Subscriber, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=SubscriberResponseSchema, status_code=status.HTTP_201_CREATED)
 async def create_subscriber(
-    email: EmailStr = Body(...), database: str = Depends(get_database)
+    subscriber: SubscriberRequestSchema, database: str = Depends(get_database)
 ):
     """Create subscriber
     """
-    return await SubscriberService(database).create(email)
+    subscriber = Subscriber(**subscriber.dict())
+    return await SubscriberService(database).create(subscriber)
 
 
-@router.put("/{id}", response_model=Subscriber)
+@router.put("/{id}", response_model=SubscriberResponseSchema)
 async def update_subscriber(
-    id: str, subscriber: Subscriber, database: str = Depends(get_database)
+    id: str, subscriber: SubscriberRequestSchema, database: str = Depends(get_database)
 ):
     """Update subscriber
     """
