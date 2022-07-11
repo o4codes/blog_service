@@ -35,7 +35,7 @@ async def create_subscriber(
     """
     subscriber = Subscriber(**subscriber.dict())
     subscriber_created: Subscriber = await SubscriberService(database).create(subscriber)
-    subscriber_created.id = str(subscriber_created.id)
+    # subscriber_created.id = str(subscriber_created.id)
     return SubscriberResponseSchema(**subscriber_created.dict())
 
 
