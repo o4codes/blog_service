@@ -2,7 +2,7 @@ from typing import List
 
 from database.subscriber import DBSubscriber
 from models.subscriber import Subscriber
-
+from .utils.codec import PasswordCodec
 from core.custom_exceptions import (
     DatabaseException,
     ExistingDataException,
@@ -94,6 +94,9 @@ class SubscriberService:
         email_search = await self.subscriber_db.get_by_email(subscriber.email)
         if email_search:
             raise ExistingDataException(f"Subscriber with email {subscriber.email} already exists")
+        
+        # hash user password
+        subscriber.password = PasswordCodec().hash(subscriber.password)
 
         subscriber = await self.subscriber_db.create(subscriber)
         if subscriber:

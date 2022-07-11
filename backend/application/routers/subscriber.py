@@ -34,7 +34,9 @@ async def create_subscriber(
     """Create subscriber
     """
     subscriber = Subscriber(**subscriber.dict())
-    return await SubscriberService(database).create(subscriber)
+    subscriber_created: Subscriber = await SubscriberService(database).create(subscriber)
+    subscriber_created.id = str(subscriber_created.id)
+    return SubscriberResponseSchema(**subscriber_created.dict())
 
 
 @router.put("/{id}", response_model=SubscriberResponseSchema)

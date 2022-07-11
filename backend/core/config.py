@@ -14,13 +14,13 @@ class Settings(BaseSettings):
     DATABASE_URL: str = config(
         "DATABASE_URL", cast=str, default="mongodb://localhost:27017"
     )
-    DATABASE_NAME: str = "o4codes-blog"
+    DATABASE_NAME: str = "rss-feeders"
     SUBSCRIBER_COLLECTION: str = "subscribers"
     RSS_PROVIDER_COLLECTION: str = "rss_providers"
     RSS_FEEDS_COLLECTION: str = "rss_feeds"
 
-    PROJECT_NAME: str = "o4codes-blog-API"
-    PROJECT_DESCRIPTION: str = "o4codes blog API"
+    PROJECT_NAME: str = "rss-feed-api"
+    PROJECT_DESCRIPTION: str = "api for getting rss feeds from providers"
     PROJECT_VERSION: str = "0.1.0"
     PROJECT_AUTHOR: str = "o4codes"
     PROJECT_AUTHOR_EMAIL: str = "o4codes@outlook.com"

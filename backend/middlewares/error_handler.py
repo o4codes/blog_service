@@ -19,4 +19,4 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
             return response
         except Exception as e:
             print(e)
-            raise AppExceptionHandler(e).raiseException()
+            return AppExceptionHandler(e).raiseException()

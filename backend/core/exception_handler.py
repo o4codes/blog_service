@@ -1,5 +1,6 @@
 from bson.errors import InvalidId
-from fastapi import HTTPException, status
+from fastapi import status
+from fastapi.responses import JSONResponse
 from core.custom_exceptions import (
     BadRequest,
     DatabaseException,
@@ -9,7 +10,8 @@ from core.custom_exceptions import (
 
 
 class AppExceptionHandler:
-    """Base application exception handler"""
+    """Base application exception handler
+    """
 
     def __init__(self, exception: Exception):
         self.message = str(exception)
@@ -31,5 +33,13 @@ class AppExceptionHandler:
             self.status_code = status.HTTP_400_BAD_REQUEST
 
     def raiseException(self):
-        """Raises the exception with the appropriate status code"""
-        raise HTTPException(status_code=self.status_code, detail=self.message)
+        """Raises the exception with the appropriate status code
+        """
+        message = {
+            "status": "failed",
+            "message": self.message,
+        }
+        return JSONResponse(
+            status_code=self.status_code,
+            content=message,
+        )
