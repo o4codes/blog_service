@@ -1,4 +1,3 @@
-
 class NotFoundException(Exception):
     """
     Exception for when a resource is not found

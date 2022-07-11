@@ -1,5 +1,6 @@
 from passlib.context import CryptContext
 
+
 class PasswordCodec:
     def __init__(self):
         self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

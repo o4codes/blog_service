@@ -4,11 +4,7 @@ from fastapi.staticfiles import StaticFiles
 
 from middlewares.error_handler import ErrorHandlerMiddleware
 from core.config import settings
-from application.routers import (
-    rss_provider, 
-    subscriber,
-    rss_feed
-)
+from application.routers import rss_provider, subscriber, rss_feed
 
 
 app = FastAPI(

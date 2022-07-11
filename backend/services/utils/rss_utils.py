@@ -39,8 +39,7 @@ class RSSUtils:
         return rss_info
 
     async def get_rss_item_data(self, rss_item) -> dict:
-        """Gets RSS feed item data
-        """
+        """Gets RSS feed item data"""
         rss_item_data = {}
         rss_item_data["title"] = rss_item.title
         rss_item_data["link"] = rss_item.link
@@ -48,13 +47,9 @@ class RSSUtils:
         rss_item_data["published"] = rss_item.published
         return rss_item_data
 
-
     async def get_rss_items(self) -> list:
-        """Gets RSS feed items
-        """
+        """Gets RSS feed items"""
         rss_items = []
         for rss_item in self.rss_data.entries:
             rss_items.append(await self.get_rss_item_data(rss_item))
         return rss_items
-
-    

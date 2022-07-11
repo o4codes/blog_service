@@ -10,8 +10,7 @@ from core.custom_exceptions import (
 
 
 class AppExceptionHandler:
-    """Base application exception handler
-    """
+    """Base application exception handler"""
 
     def __init__(self, exception: Exception):
         self.message = str(exception)
@@ -33,8 +32,7 @@ class AppExceptionHandler:
             self.status_code = status.HTTP_400_BAD_REQUEST
 
     def raiseException(self):
-        """Raises the exception with the appropriate status code
-        """
+        """Raises the exception with the appropriate status code"""
         message = {
             "status": "failed",
             "message": self.message,

@@ -1,18 +1,17 @@
 from datetime import datetime
 from bson import ObjectId
 from models.utils.custom_type import PyObjectId
-from pydantic import AnyUrl, BaseModel, EmailStr, Field
+from pydantic import AnyUrl, BaseModel, Field
 
 
 class RssFeed(BaseModel):
-    """Model of RSS feeds
-    """
+    """Model of RSS feeds"""
 
     id: PyObjectId = Field(default_factory=PyObjectId)
     title: str
     link: AnyUrl
     description: str
-    published_date: datetime 
+    published_date: datetime
     provider_id: PyObjectId = Field(default_factory=PyObjectId)
 
     class Config:

@@ -15,7 +15,6 @@ class SubscriberService:
         self.database = database
         self.subscriber_db = DBSubscriber(self.database)
 
-
     async def list(self, **query) -> List[Subscriber]:
         """Gets a list of all subscrubers
 
@@ -28,7 +27,6 @@ class SubscriberService:
         subscribers = await self.subscriber_db.list(**query)
         return subscribers
 
-
     async def count(self, **query) -> int:
         """Gets the count of subscribers
 
@@ -39,7 +37,6 @@ class SubscriberService:
             int: count of subscribers
         """
         return await self.subscriber_db.count(**query)
-
 
     async def get_by_email(self, email) -> Subscriber:
         """Gets a subscriber by email
@@ -59,7 +56,6 @@ class SubscriberService:
             return subscriber
         raise NotFoundException(f"Subscriber with email {email} not found")
 
-
     async def get_by_id(self, id: str) -> Subscriber:
         """Gets a subscriber by id
 
@@ -77,7 +73,6 @@ class SubscriberService:
             return subscriber
         raise NotFoundException(f"Subscriber with id {id} not found")
 
-
     async def create(self, subscriber: Subscriber) -> Subscriber:
         """Creates a subscriber
 
@@ -93,8 +88,10 @@ class SubscriberService:
         """
         email_search = await self.subscriber_db.get_by_email(subscriber.email)
         if email_search:
-            raise ExistingDataException(f"Subscriber with email {subscriber.email} already exists")
-        
+            raise ExistingDataException(
+                f"Subscriber with email {subscriber.email} already exists"
+            )
+
         # hash user password
         subscriber.password = PasswordCodec().hash(subscriber.password)
 
@@ -102,7 +99,6 @@ class SubscriberService:
         if subscriber:
             return subscriber
         raise DatabaseException("Failed to create subscriber")
-
 
     async def update(self, id: str, subscriber: Subscriber) -> Subscriber:
         """Updates a subscriber
@@ -133,7 +129,6 @@ class SubscriberService:
         raise ExistingDataException(
             f"Subscriber with email {subscriber.email} already exists"
         )
-
 
     async def delete(self, id: str) -> bool:
         """Deletes a subscriber by id
