@@ -5,6 +5,9 @@ from fastapi.staticfiles import StaticFiles
 from middlewares.error_handler import ErrorHandlerMiddleware
 from core.config import settings
 from application.routers import rss_provider, subscriber, rss_feed
+from services.utils.mailing import send_mail
+
+
 
 
 app = FastAPI(
@@ -14,6 +17,10 @@ app = FastAPI(
     docs_url=settings.SWAGGER_URL,
     redoc_url=settings.REDOC_URL,
 )
+
+@app.on_event("startup")
+def startup():
+    send_mail()
 
 app.add_middleware(
     CORSMiddleware,

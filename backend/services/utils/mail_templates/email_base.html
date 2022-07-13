@@ -1,0 +1,12 @@
+<div style="padding: 0px; margin: 0px; box-sizing: border-box;">
+    <div style="background-color: #1e90ff; height:20px;"></div>
+    <div style="padding: 20px;">
+        <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">{{ Header }}</h1>
+        <br>
+        <p style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: larger;">{{ Body }}</p>
+        {% if action %}
+            <a href="{{ action }}" style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: larger">{{ action_message }}</a>
+        {% endif %}
+    </div>
+   
+</div>

@@ -1,4 +1,5 @@
 from passlib.context import CryptContext
+from jose import jwt, JWTError
 
 
 class PasswordCodec:
@@ -10,3 +11,7 @@ class PasswordCodec:
 
     def verify(self, password, hashed_password):
         return self.pwd_context.verify(password, hashed_password)
+
+class TokenCodec:
+    def __init__(self):
+        pass
