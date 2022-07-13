@@ -5,7 +5,11 @@
         <br>
         <p style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: larger;">{{ Body }}</p>
         {% if action %}
-            <a href="{{ action }}" style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: larger">{{ action_message }}</a>
+            <a 
+            href="{{ action }}" 
+            style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: larger; border-radius: 10px; background-color: dodgerblue; padding: 10px 20px; color: aliceblue; align: center;">
+                {{ action_message }}
+            </a>
         {% endif %}
     </div>
    
