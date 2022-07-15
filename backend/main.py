@@ -4,9 +4,7 @@ from fastapi.staticfiles import StaticFiles
 
 from middlewares.error_handler import ErrorHandlerMiddleware
 from core.config import settings
-from application.routers import rss_provider, subscriber, rss_feed
-
-
+from application.routers import rss_provider, subscriber, rss_feed, auth
 
 
 app = FastAPI(
@@ -24,11 +22,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# app.add_middleware(ErrorHandlerMiddleware, some_attribute="Error Handling Middleware")
+app.add_middleware(ErrorHandlerMiddleware, some_attribute="Error Handling Middleware")
 
 app.include_router(subscriber.router, prefix=settings.API_V1_STR)
 app.include_router(rss_provider.router, prefix=settings.API_V1_STR)
 app.include_router(rss_feed.router, prefix=settings.API_V1_STR)
+app.include_router(auth.router, prefix=settings.API_V1_STR)
 
 
 @app.get("/api/v1/ping")

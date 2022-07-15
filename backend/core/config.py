@@ -28,12 +28,12 @@ class Settings(BaseSettings):
     PROJECT_AUTHOR: str = "o4codes"
     PROJECT_AUTHOR_EMAIL: str = "o4codes@outlook.com"
 
-    EMAIL_HOST = 'smtp.mailtrap.io'
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-    EMAIL_PORT = '2525'
-    MAIL_FROM='o4codes@outlook.com'
-    MAIL_FROM_NAME='dev@rss-fidder'
+    EMAIL_HOST = "smtp.mailtrap.io"
+    EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+    EMAIL_PORT = "2525"
+    MAIL_FROM = "o4codes@outlook.com"
+    MAIL_FROM_NAME = "dev@rss-fidder"
 
 
 settings = Settings()

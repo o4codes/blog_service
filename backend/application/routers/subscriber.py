@@ -35,19 +35,18 @@ async def get_subscriber(id: str, database: str = Depends(get_database)):
 )
 async def create_subscriber(
     background_tasks: BackgroundTasks,
-    subscriber: SubscriberRequestSchema, 
+    subscriber: SubscriberRequestSchema,
     database: str = Depends(get_database),
-    
 ):
     """Create subscriber"""
     subscriber = Subscriber(**subscriber.dict())
     subscriber_created: Subscriber = await SubscriberService(database).create(
         subscriber
     )
-    
+
     # send activation mail to subscriber
     token_url = await AuthService(database).create_token_url(
-        "api/v1/auth/activate", subscriber_created
+        "api/v1/auth/account/activate", subscriber_created
     )
     mailing = Mailing()
     template_vars = TemplateBodyVars(
@@ -57,10 +56,10 @@ async def create_subscriber(
         action_message="Activate Account",
     )
     background_tasks.add_task(
-        mailing.send_email, 
-        "Complete Registeration", 
-        template_vars, 
-        subscriber_created.email 
+        mailing.send_email,
+        "Complete Registeration",
+        template_vars,
+        subscriber_created.email,
     )
     return SubscriberResponseSchema(**subscriber_created.dict())
 

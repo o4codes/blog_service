@@ -1,14 +1,16 @@
 from pydantic import EmailStr
 from core.config import settings
-from fastapi_mail import FastMail, MessageSchema,ConnectionConfig
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from pydantic import BaseModel, AnyUrl
 from typing import Union
+
 
 class TemplateBodyVars(BaseModel):
     header: str
     body: str
     action: Union[AnyUrl, None]
     action_message: Union[str, None]
+
 
 class Mailing:
     def __init__(self):
@@ -24,17 +26,16 @@ class Mailing:
             MAIL_SSL=False,
         )
 
-
     async def send_email(
-        self, 
-        subject: str, 
+        self,
+        subject: str,
         template_vars: TemplateBodyVars,
-        *recipients: EmailStr, 
+        *recipients: EmailStr,
     ):
         message = MessageSchema(
             recipients=recipients,
             subject=subject,
-            template_body = template_vars.dict(),
+            template_body=template_vars.dict(),
         )
         mail = FastMail(self.mail_conf)
         await mail.send_message(message, template_name="email_base.html")

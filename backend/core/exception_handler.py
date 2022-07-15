@@ -6,6 +6,7 @@ from core.custom_exceptions import (
     DatabaseException,
     ExistingDataException,
     NotFoundException,
+    UnauthorizedException,
 )
 
 
@@ -23,13 +24,13 @@ class AppExceptionHandler:
             self.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
         if isinstance(exception, ExistingDataException):
+            self.status_code = status.HTTP_409_CONFLICT
+
+        if isinstance(exception, BadRequest) or isinstance(exception, InvalidId):
             self.status_code = status.HTTP_400_BAD_REQUEST
 
-        if isinstance(exception, InvalidId):
-            self.status_code = status.HTTP_400_BAD_REQUEST
-
-        if isinstance(exception, BadRequest):
-            self.status_code = status.HTTP_400_BAD_REQUEST
+        if isinstance(exception, UnauthorizedException):
+            self.status_code = status.HTTP_401_UNAUTHORIZED
 
     def raiseException(self):
         """Raises the exception with the appropriate status code"""
