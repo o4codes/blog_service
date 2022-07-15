@@ -8,10 +8,12 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
     JWT_SECRET_KEY: str = config("JWT_SECRET_KEY")
+    AUTH_EXP_TIME: int = config("AUTH_EXP_TIME", cast=int, default=15)
     DEBUG: bool = config("DEBUG", cast=bool, default=True)
     SWAGGER_URL: str = API_V1_STR + "/docs"
     REDOC_URL: str = API_V1_STR + "/redoc"
 
+    FRONTEND_URL: str = config("FRONTEND_URL", default="http://localhost:8001")
     DATABASE_URL: str = config(
         "DATABASE_URL", cast=str, default="mongodb://localhost:27017"
     )

@@ -1,8 +1,8 @@
 from typing import List
-from fastapi import Body, Depends, status
+from fastapi import BackgroundTasks, Depends, status
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
-from pydantic import EmailStr
+from requests import head
 
 from core.dependencies import get_database
 from application.schema.subscriber import (
@@ -11,6 +11,8 @@ from application.schema.subscriber import (
 )
 from models.subscriber import Subscriber
 from services.subscriber import SubscriberService
+from services.auth import AuthService
+from services.utils.mailing import Mailing, TemplateBodyVars
 
 router = APIRouter(prefix="/subscribers", tags=["SUBSCRIBER"])
 
@@ -32,14 +34,34 @@ async def get_subscriber(id: str, database: str = Depends(get_database)):
     "/", response_model=SubscriberResponseSchema, status_code=status.HTTP_201_CREATED
 )
 async def create_subscriber(
-    subscriber: SubscriberRequestSchema, database: str = Depends(get_database)
+    background_tasks: BackgroundTasks,
+    subscriber: SubscriberRequestSchema, 
+    database: str = Depends(get_database),
+    
 ):
     """Create subscriber"""
     subscriber = Subscriber(**subscriber.dict())
     subscriber_created: Subscriber = await SubscriberService(database).create(
         subscriber
     )
-    # subscriber_created.id = str(subscriber_created.id)
+    
+    # send activation mail to subscriber
+    token_url = await AuthService(database).create_token_url(
+        "api/v1/auth/activate", subscriber_created
+    )
+    mailing = Mailing()
+    template_vars = TemplateBodyVars(
+        header="Activate your account",
+        body=f"To complete your registration, please click on the link below:",
+        action=token_url,
+        action_message="Activate Account",
+    )
+    background_tasks.add_task(
+        mailing.send_email, 
+        "Complete Registeration", 
+        template_vars, 
+        subscriber_created.email 
+    )
     return SubscriberResponseSchema(**subscriber_created.dict())
 
 

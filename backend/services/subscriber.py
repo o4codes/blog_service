@@ -88,8 +88,12 @@ class SubscriberService:
         """
         email_search = await self.subscriber_db.get_by_email(subscriber.email)
         if email_search:
+            if email_search.is_verified:
+                raise ExistingDataException(
+                    f"Subscriber with email {subscriber.email} already exists"
+                )
             raise ExistingDataException(
-                f"Subscriber with email {subscriber.email} already exists"
+                f"Subscriber with email {subscriber.email} has not verified email"
             )
 
         # hash user password

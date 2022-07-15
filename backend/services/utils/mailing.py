@@ -17,15 +17,15 @@ class Mailing:
             MAIL_PASSWORD=settings.EMAIL_HOST_PASSWORD,
             MAIL_SERVER=settings.EMAIL_HOST,
             MAIL_PORT=settings.EMAIL_PORT,
-            MAIL_USE_TLS=True,
-            MAIL_USE_SSL=False,
             MAIL_FROM=settings.MAIL_FROM,
             MAIL_FROM_NAME=settings.MAIL_FROM_NAME,
-            TEMPLATE_FOLDER="services/utils/mail_templates"
+            TEMPLATE_FOLDER="services/utils/mail_templates",
+            MAIL_TLS=True,
+            MAIL_SSL=False,
         )
 
 
-    def send_email(
+    async def send_email(
         self, 
         subject: str, 
         template_vars: TemplateBodyVars,
@@ -37,6 +37,5 @@ class Mailing:
             template_body = template_vars.dict(),
         )
         mail = FastMail(self.mail_conf)
-        mail.send(message, template_name="email_base.html")
-        mail.close()
+        await mail.send_message(message, template_name="email_base.html")
         return True
