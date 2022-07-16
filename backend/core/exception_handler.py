@@ -1,12 +1,13 @@
 from bson.errors import InvalidId
 from fastapi import status
 from fastapi.responses import JSONResponse
-from core.custom_exceptions import (
+from core.exceptions import (
     BadRequest,
     DatabaseException,
     ExistingDataException,
     NotFoundException,
-    UnauthorizedException,
+    ForbiddenException,
+    UnauthorizedException
 )
 
 
@@ -16,6 +17,7 @@ class AppExceptionHandler:
     def __init__(self, exception: Exception):
         self.message = str(exception)
         self.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        self.headers = {}
 
         if isinstance(exception, NotFoundException):
             self.status_code = status.HTTP_404_NOT_FOUND
@@ -29,8 +31,13 @@ class AppExceptionHandler:
         if isinstance(exception, BadRequest) or isinstance(exception, InvalidId):
             self.status_code = status.HTTP_400_BAD_REQUEST
 
+        if isinstance(exception, ForbiddenException):
+            self.status_code = status.HTTP_403_FORBIDDEN
+        
         if isinstance(exception, UnauthorizedException):
             self.status_code = status.HTTP_401_UNAUTHORIZED
+            self.headers = {"WWW-Authenticate": "Bearer"},
+
 
     def raiseException(self):
         """Raises the exception with the appropriate status code"""
@@ -41,4 +48,5 @@ class AppExceptionHandler:
         return JSONResponse(
             status_code=self.status_code,
             content=message,
+            headers=self.headers
         )

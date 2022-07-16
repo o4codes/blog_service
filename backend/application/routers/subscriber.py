@@ -2,9 +2,9 @@ from typing import List
 from fastapi import BackgroundTasks, Depends, status
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
-from requests import head
 
-from core.dependencies import get_database
+from core.dependencies import get_database, get_current_user
+from core.exceptions import UnauthorizedException
 from application.schema.subscriber import (
     SubscriberRequestSchema,
     SubscriberResponseSchema,
@@ -24,10 +24,15 @@ async def get_all_subscribers(database: str = Depends(get_database)):
 
 
 @router.get("/{id}", response_model=SubscriberResponseSchema)
-async def get_subscriber(id: str, database: str = Depends(get_database)):
+async def get_subscriber(
+    id: str,
+    user: Subscriber = Depends(get_current_user), 
+    database: str = Depends(get_database)):
     """Get subscriber by id"""
     subscriber = await SubscriberService(database).get_by_id(id)
-    return SubscriberResponseSchema(**subscriber.dict())
+    if subscriber.id == user.id:
+        return SubscriberResponseSchema(**subscriber.dict())
+    raise UnauthorizedException("Unauthorized to view account")
 
 
 @router.post(

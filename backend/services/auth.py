@@ -1,8 +1,9 @@
+from typing import Union
 from services.utils.codec import PasswordCodec, TokenCodec
 from database.subscriber import DBSubscriber
 from models.subscriber import Subscriber
 from core.config import settings
-from core.custom_exceptions import BadRequest, UnauthorizedException
+from core.exceptions import BadRequest, UnauthorizedException, NotFoundException
 
 
 class AuthService:
@@ -10,7 +11,7 @@ class AuthService:
         self.db = db
         self.subscriber_db = DBSubscriber(db)
 
-    async def login(self, email: str, password: str) -> bool:
+    async def login(self, email: str, password: str) -> Subscriber:
         """
         Logs in a user
         """
@@ -18,7 +19,7 @@ class AuthService:
         if subscriber:
             if PasswordCodec().verify(password, subscriber.password):
                 if subscriber.is_verified:
-                    return True
+                    return subscriber
                 raise UnauthorizedException("Account is not verified")
             raise BadRequest("Invalid password")
         raise BadRequest("Invalid username")
@@ -62,3 +63,13 @@ class AuthService:
             )
             return subscriber_update
         raise Exception("Invalid token")
+
+    async def get_subscriber_by_token(self, token: str) -> Union[Subscriber, None]:
+        """
+        Get user by token
+        """
+        subscriber_dict = TokenCodec().decode(token)
+        subscriber = await self.subscriber_db.get_by_email(subscriber_dict["email"])
+        if subscriber:
+            return subscriber
+        raise NotFoundException("User not found")

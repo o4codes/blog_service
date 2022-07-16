@@ -50,6 +50,18 @@ class BadRequest(Exception):
         return self.message
 
 
+class ForbiddenException(Exception):
+    """
+    Exception for when a user is forbidden from an action
+    """
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(message)
+
+    def __str__(self):
+        return self.message
+        
 class UnauthorizedException(Exception):
     """
     Exception for when a user is not authorized

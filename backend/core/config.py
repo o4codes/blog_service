@@ -2,7 +2,7 @@ import secrets
 
 from decouple import config
 from pydantic import BaseSettings
-
+from fastapi.security import OAuth2PasswordRequestForm
 
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"

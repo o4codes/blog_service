@@ -2,7 +2,7 @@ from typing import List
 
 from database.rss_feed import RssFeedDatabase
 from models.rss_feed import RssFeed
-from core.custom_exceptions import (
+from core.exceptions import (
     NotFoundException,
     DatabaseException,
     ExistingDataException,

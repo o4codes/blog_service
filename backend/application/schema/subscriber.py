@@ -23,3 +23,17 @@ class SubscriberResponseSchema(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+
+class LoginResponseSchema(BaseModel):
+    id: PyObjectId
+    email: str
+    name: str
+    access_token: str
+    token_type: str
+
+    class Config:
+        """Config for pydantic to handle json serialization"""
+
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}

@@ -1,29 +1,35 @@
 from fastapi.routing import APIRouter
-from fastapi import status, Depends, Body, BackgroundTasks
+from fastapi import Form, Depends, Body, BackgroundTasks
 from pydantic import EmailStr
 
 from core.dependencies import get_database
-from core.custom_exceptions import NotFoundException, BadRequest
+from core.exceptions import NotFoundException, BadRequest
 from services.auth import AuthService
 from services.subscriber import SubscriberService
 from services.utils.mailing import Mailing, TemplateBodyVars
-from application.schema.subscriber import SubscriberResponseSchema
+from application.schema.subscriber import SubscriberResponseSchema, LoginResponseSchema
+from services.utils.codec import TokenCodec
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
-@router.post("/login", response_model=SubscriberResponseSchema)
+@router.post("/login", response_model=LoginResponseSchema)
 async def login(
-    email: EmailStr = Body(...),
-    password: str = Body(...),
+    email: EmailStr = Form(...),
+    password: str = Form(...),
     database: str = Depends(get_database),
 ):
     """Subscriber Login Endpoint"""
     auth_service = AuthService(database)
     subscriber = await auth_service.login(email, password)
-    subscriber = SubscriberResponseSchema(**subscriber.dict())
-    return subscriber
+    subscriber.id = str(subscriber.id)
+    subscriber_dict = subscriber.dict(
+        exclude={"password", "subscribed_blogs", "created_at"}
+    )
+    account_token = TokenCodec().encode(subscriber_dict)
+    login_response = LoginResponseSchema(**subscriber.dict(), token_type="Bearer", access_token=account_token)
+    return login_response
 
 
 @router.get("/account/verify", response_model=SubscriberResponseSchema)

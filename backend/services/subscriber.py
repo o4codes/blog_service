@@ -3,7 +3,7 @@ from typing import List
 from database.subscriber import DBSubscriber
 from models.subscriber import Subscriber
 from .utils.codec import PasswordCodec
-from core.custom_exceptions import (
+from core.exceptions import (
     DatabaseException,
     ExistingDataException,
     NotFoundException,
