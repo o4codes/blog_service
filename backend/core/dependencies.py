@@ -16,7 +16,6 @@ def get_database():
 
 async def get_current_user(token: HTTPBearer = Depends(token_auth_scheme)):
     """Retrieves current user from token"""
-    print(token)
     auth_service = AuthService(get_database())
     try:
         subscriber = await auth_service.get_subscriber_by_token(token.credentials)
