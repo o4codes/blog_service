@@ -7,4 +7,4 @@ Schedules a periodically update of the RSS feeds.
 
 ## Backend Docs
 
-The backend docs are available [here]('https://rss-fidder.herokuapp.com/api/v1/docs')
+The backend docs is available [link to docs](https://rss-fidder.herokuapp.com/api/v1/docs)
