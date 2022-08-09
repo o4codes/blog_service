@@ -3,7 +3,7 @@ from fastapi import BackgroundTasks, Depends, status
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
 
-from core.dependencies import get_database, get_current_user
+from core.dependencies import get_database, get_current_user, get_admin_user
 from core.exceptions import UnauthorizedException
 from application.schema.subscriber import (
     SubscriberRequestSchema,
@@ -18,7 +18,10 @@ router = APIRouter(prefix="/subscribers", tags=["SUBSCRIBER"])
 
 
 @router.get("/", response_model=List[SubscriberResponseSchema])
-async def get_all_subscribers(database: str = Depends(get_database)):
+async def get_all_subscribers(
+    database: str = Depends(get_database),
+    current_user: Subscriber = Depends(get_admin_user),
+    ):
     """Get all subscribers"""
     return await SubscriberService(database).list()
 
@@ -27,7 +30,8 @@ async def get_all_subscribers(database: str = Depends(get_database)):
 async def get_subscriber(
     id: str,
     user: Subscriber = Depends(get_current_user), 
-    database: str = Depends(get_database)):
+    database: str = Depends(get_database)
+    ):
     """Get subscriber by id"""
     subscriber = await SubscriberService(database).get_by_id(id)
     if subscriber.id == user.id:
@@ -71,14 +75,24 @@ async def create_subscriber(
 
 @router.put("/{id}", response_model=SubscriberResponseSchema)
 async def update_subscriber(
-    id: str, subscriber: SubscriberRequestSchema, database: str = Depends(get_database)
+    id: str, 
+    subscriber: SubscriberRequestSchema, 
+    database: str = Depends(get_database),
+    current_user: Subscriber = Depends(get_current_user)
 ):
-    """Update subscriber"""
+    """Update subscriber
+    """
+    if current_user.id != id:
+        raise UnauthorizedException("Unauthorized to update account")
     return await SubscriberService(database).update(id, subscriber)
 
 
 @router.delete("/{id}", response_class=JSONResponse)
-async def delete_subscriber(id: str, database: str = Depends(get_database)):
+async def delete_subscriber(
+    id: str, 
+    database: str = Depends(get_database),
+    current_user: Subscriber = Depends(get_admin_user)
+    ):
     """Delete subscriber"""
     await SubscriberService(database).delete(id)
     return JSONResponse(
