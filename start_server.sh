@@ -1,1 +1,1 @@
-cd backend && ./run.sh
+cd backend && ./dev_run.sh

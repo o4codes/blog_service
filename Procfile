@@ -1,1 +1,1 @@
-web: sh -c 'cd backend && ./run.sh'
+web: sh -c 'cd backend && ./prod_run.sh'
