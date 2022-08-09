@@ -14,7 +14,7 @@ class SubscriberResponseSchema(BaseModel):
     id: PyObjectId
     email: str
     name: str
-    subscribed_blogs: list
+    subscribed_providers: list
     created_at: str
 
     class Config:

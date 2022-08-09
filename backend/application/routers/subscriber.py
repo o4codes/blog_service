@@ -98,3 +98,27 @@ async def delete_subscriber(
     return JSONResponse(
         status_code=status.HTTP_200_OK, content={"message": "Subscriber deleted"}
     )
+
+@router.post("/{id}/providers/{provider_id}", response_model=SubscriberResponseSchema)
+async def follow_provider(
+    id: str, 
+    provider_id: str, 
+    database: str = Depends(get_database),
+    current_user: Subscriber = Depends(get_current_user)
+    ):
+    """Add provider to subscriber"""
+    if current_user.id != id:
+        raise UnauthorizedException("Unauthorized to update account")
+    return await SubscriberService(database).provider_follow(id, provider_id)
+
+@router.delete("/{id}/providers/{provider_id}", response_model=SubscriberResponseSchema)
+async def unfollow_provider(
+    id: str, 
+    provider_id: str, 
+    database: str = Depends(get_database),
+    current_user: Subscriber = Depends(get_current_user)
+    ):
+    """Remove provider from subscriber"""
+    if current_user.id != id:
+        raise UnauthorizedException("Unauthorized to update account")
+    return await SubscriberService(database).provider_unfollow(id, provider_id)

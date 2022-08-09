@@ -1,6 +1,7 @@
 from typing import List
 
 from database.subscriber import DBSubscriber
+from database.rss_provider import RssProviderDatabase
 from models.subscriber import Subscriber
 from .utils.codec import PasswordCodec
 from core.exceptions import (
@@ -8,7 +9,6 @@ from core.exceptions import (
     ExistingDataException,
     NotFoundException,
 )
-
 
 class SubscriberService:
     def __init__(self, database):
@@ -154,3 +154,53 @@ class SubscriberService:
         if result:
             return True
         raise DatabaseException("Failed to delete subscriber")
+
+    async def provider_follow(self, id: str, provider_id: str) -> bool:
+        """Follows a provider
+
+        Args:
+            id (str): id of subscriber
+            provider_id (str): id of provider
+        """
+        db_subscriber = await self.subscriber_db.get_by_id(id)
+        if db_subscriber is None:
+            raise NotFoundException(f"Subscriber with id {id} not found")
+        
+        provider = await RssProviderDatabase(self.database).get_by_id(provider_id)
+        if provider is None:
+            raise NotFoundException(f"Provider with id {provider_id} not found")
+        
+        subscriber_providers = db_subscriber.subscribed_providers
+        if provider_id in subscriber_providers:
+            raise ExistingDataException(
+                f"Subscriber with id {id} already follows provider with id {provider_id}"
+            )
+        subscriber_providers.append(provider_id)
+        db_subscriber.subscribed_providers = subscriber_providers
+        result = await self.subscriber_db.update(id, db_subscriber)
+        return result
+
+    async def provider_unfollow(self, id: str, provider_id: str) -> bool:
+        """Unfollows a provider
+
+        Args:
+            id (str): id of subscriber
+            provider_id (str): id of provider
+        """
+        db_subscriber = await self.subscriber_db.get_by_id(id)
+        if db_subscriber is None:
+            raise NotFoundException(f"Subscriber with id {id} not found")
+
+        provider = await RssProviderDatabase(self.database).get_by_id(provider_id)
+        if provider is None:
+            raise NotFoundException(f"Provider with id {provider_id} not found")
+
+        subscriber_providers = db_subscriber.subscribed_providers
+        if provider_id not in subscriber_providers:
+            raise NotFoundException(
+                f"Subscriber with id {id} does not follow provider with id {provider_id}"
+            )
+        subscriber_providers.remove(provider_id)
+        db_subscriber.subscribed_providers = subscriber_providers
+        result = await self.subscriber_db.update(id, db_subscriber)
+        return result

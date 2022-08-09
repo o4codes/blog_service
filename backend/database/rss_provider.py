@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from bson import ObjectId
 from core.config import settings
@@ -39,7 +39,7 @@ class RssProviderDatabase:
         """
         return await self.collection.count_documents(query)
 
-    async def get_by_id(self, provider_id: str) -> RssProvider:
+    async def get_by_id(self, provider_id: str) -> Union[RssProvider,None]:
         """
         Gets a rss provider by id
 

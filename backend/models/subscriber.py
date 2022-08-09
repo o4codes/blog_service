@@ -14,7 +14,7 @@ class Subscriber(BaseModel):
     name: str
     email: EmailStr
     is_verified: bool = False
-    subscribed_blogs: List[PyObjectId] = Field(default_factory=list)
+    subscribed_providers: List[PyObjectId] = Field(default_factory=list)
     is_admin: bool = False
     password: str
     created_at: str = datetime.now().isoformat()
