@@ -28,7 +28,9 @@ async def login(
         exclude={"password", "subscribed_blogs", "created_at"}
     )
     account_token = TokenCodec().encode(subscriber_dict)
-    login_response = LoginResponseSchema(**subscriber.dict(), token_type="Bearer", access_token=account_token)
+    login_response = LoginResponseSchema(
+        **subscriber.dict(), token_type="Bearer", access_token=account_token
+    )
     return login_response
 
 

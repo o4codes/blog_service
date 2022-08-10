@@ -7,7 +7,7 @@ from core.exceptions import (
     ExistingDataException,
     NotFoundException,
     ForbiddenException,
-    UnauthorizedException
+    UnauthorizedException,
 )
 
 
@@ -33,11 +33,10 @@ class AppExceptionHandler:
 
         if isinstance(exception, ForbiddenException):
             self.status_code = status.HTTP_403_FORBIDDEN
-        
+
         if isinstance(exception, UnauthorizedException):
             self.status_code = status.HTTP_401_UNAUTHORIZED
-            self.headers = {"WWW-Authenticate": "Bearer"},
-
+            self.headers = ({"WWW-Authenticate": "Bearer"},)
 
     def raiseException(self):
         """Raises the exception with the appropriate status code"""
@@ -46,7 +45,5 @@ class AppExceptionHandler:
             "message": self.message,
         }
         return JSONResponse(
-            status_code=self.status_code,
-            content=message,
-            headers=self.headers
+            status_code=self.status_code, content=message, headers=self.headers
         )

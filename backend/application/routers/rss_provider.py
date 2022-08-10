@@ -15,7 +15,7 @@ router = APIRouter(prefix="/rss_providers", tags=["RSS_PROVIDER"])
 async def list_rss_providers(
     db=Depends(get_database),
     current_user=Depends(get_current_user),
-    ):
+):
     """Gets a list of all rss providers"""
     rss_provider_service = RssProviderService(db)
     rss_providers = await rss_provider_service.list()
@@ -24,10 +24,10 @@ async def list_rss_providers(
 
 @router.get("/{id}", response_model=RssProvider)
 async def get_rss_provider_by_id(
-    id: str, 
+    id: str,
     db=Depends(get_database),
     current_user=Depends(get_current_user),
-    ):
+):
     """Gets a rss provider by id"""
     rss_provider_service = RssProviderService(db)
     rss_provider = await rss_provider_service.get_by_id(id)
@@ -36,10 +36,10 @@ async def get_rss_provider_by_id(
 
 @router.post("/", response_model=RssProvider, status_code=status.HTTP_201_CREATED)
 async def create_rss_provider(
-    url: AnyUrl, 
+    url: AnyUrl,
     db=Depends(get_database),
     current_user=Depends(get_admin_user),
-    ):
+):
     """Creates a rss provider"""
     rss_provider_service = RssProviderService(db)
     rss_provider = await rss_provider_service.create(url)
@@ -48,11 +48,11 @@ async def create_rss_provider(
 
 @router.put("/{id}", response_model=RssProvider)
 async def update_rss_provider(
-    id: str, 
-    url: AnyUrl, 
+    id: str,
+    url: AnyUrl,
     db=Depends(get_database),
     current_user=Depends(get_admin_user),
-    ):
+):
     """Updates a rss provider"""
     rss_provider_service = RssProviderService(db)
     rss_provider = await rss_provider_service.update(id, url)
@@ -61,10 +61,10 @@ async def update_rss_provider(
 
 @router.delete("/{id}", response_class=JSONResponse)
 async def delete_rss_provider(
-    id: str, 
+    id: str,
     db=Depends(get_database),
     current_user=Depends(get_admin_user),
-    ):
+):
     """Deletes a rss provider"""
     await RssProviderService(db).delete(id)
     return JSONResponse(

@@ -24,6 +24,7 @@ class SubscriberResponseSchema(BaseModel):
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
 
+
 class LoginResponseSchema(BaseModel):
     id: PyObjectId
     email: str

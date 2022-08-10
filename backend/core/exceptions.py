@@ -61,7 +61,8 @@ class ForbiddenException(Exception):
 
     def __str__(self):
         return self.message
-        
+
+
 class UnauthorizedException(Exception):
     """
     Exception for when a user is not authorized

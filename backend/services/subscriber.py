@@ -10,6 +10,7 @@ from core.exceptions import (
     NotFoundException,
 )
 
+
 class SubscriberService:
     def __init__(self, database):
         self.database = database
@@ -165,11 +166,11 @@ class SubscriberService:
         db_subscriber = await self.subscriber_db.get_by_id(id)
         if db_subscriber is None:
             raise NotFoundException(f"Subscriber with id {id} not found")
-        
+
         provider = await RssProviderDatabase(self.database).get_by_id(provider_id)
         if provider is None:
             raise NotFoundException(f"Provider with id {provider_id} not found")
-        
+
         subscriber_providers = db_subscriber.subscribed_providers
         if provider_id in subscriber_providers:
             raise ExistingDataException(

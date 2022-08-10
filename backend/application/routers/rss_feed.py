@@ -10,8 +10,8 @@ from models.subscriber import Subscriber
 from services.rss_feed import RssFeedService
 from services.rss_provider import RssProviderService
 
-
 router = APIRouter(prefix="/rss_feeds", tags=["RSS Feed"])
+
 
 @router.get("/", response_model=List[RssFeed])
 async def list_rss_feeds(db=Depends(get_database)):
@@ -23,9 +23,10 @@ async def list_rss_feeds(db=Depends(get_database)):
 
 @router.get("/{id}", response_model=RssFeed)
 async def get_rss_feed_by_id(
-    id: str, db=Depends(get_database),
+    id: str,
+    db=Depends(get_database),
     current_user: Subscriber = Depends(get_current_user),
-    ):
+):
     """Gets a rss feed by id"""
     rss_feed_service = RssFeedService(db)
     rss_feed = await rss_feed_service.get_by_id(id)
@@ -34,10 +35,10 @@ async def get_rss_feed_by_id(
 
 @router.get("{url}", response_model=RssFeed)
 async def get_rss_feed_by_url(
-    url: str, 
+    url: str,
     db=Depends(get_database),
     current_user: Subscriber = Depends(get_current_user),
-    ):
+):
     """Gets a rss feed by url"""
     rss_feed_service = RssFeedService(db)
     rss_feed = await rss_feed_service.get_by_url(url)
@@ -46,10 +47,10 @@ async def get_rss_feed_by_url(
 
 @router.get("/{provider_name}", response_model=List[RssFeed])
 async def get_rss_feed_by_provider_name(
-    provider_name: str, 
+    provider_name: str,
     db=Depends(get_database),
     current_user: Subscriber = Depends(get_current_user),
-    ):
+):
     """Gets a rss feed by provider name"""
     rss_feed_service = RssFeedService(db)
     rss_provider_service = RssProviderService(db)
@@ -66,10 +67,10 @@ async def get_rss_feed_by_provider_name(
 
 @router.delete("/{id}", response_class=JSONResponse)
 async def delete_rss_feed(
-    id: str, 
+    id: str,
     db=Depends(get_database),
     current_user: Subscriber = Depends(get_admin_user),
-    ):
+):
     """Deletes a rss feed"""
     await RssFeedService(db).delete(id)
     return JSONResponse(

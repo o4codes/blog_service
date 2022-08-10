@@ -8,6 +8,7 @@ from services.auth import AuthService
 
 token_auth_scheme = HTTPBearer()
 
+
 def get_database():
     """Retrieves database connection object"""
     client = motor.motor_asyncio.AsyncIOMotorClient(settings.DATABASE_URL)
@@ -23,11 +24,10 @@ async def get_current_user(token: HTTPBearer = Depends(token_auth_scheme)):
     except NotFoundException:
         raise UnauthorizedException("Invalid authentication credentials")
 
+
 async def get_admin_user(token: HTTPBearer = Depends(token_auth_scheme)):
-    """ Retrieve current admin user from token
-    """
+    """Retrieve current admin user from token"""
     subscriber = await get_current_user(token)
     if subscriber.is_admin:
         return subscriber
     raise ForbiddenException("You are not permitted to perform this action")
-

@@ -21,7 +21,7 @@ router = APIRouter(prefix="/subscribers", tags=["SUBSCRIBER"])
 async def get_all_subscribers(
     database: str = Depends(get_database),
     current_user: Subscriber = Depends(get_admin_user),
-    ):
+):
     """Get all subscribers"""
     return await SubscriberService(database).list()
 
@@ -29,9 +29,9 @@ async def get_all_subscribers(
 @router.get("/{id}", response_model=SubscriberResponseSchema)
 async def get_subscriber(
     id: str,
-    user: Subscriber = Depends(get_current_user), 
-    database: str = Depends(get_database)
-    ):
+    user: Subscriber = Depends(get_current_user),
+    database: str = Depends(get_database),
+):
     """Get subscriber by id"""
     subscriber = await SubscriberService(database).get_by_id(id)
     if subscriber.id == user.id:
@@ -75,13 +75,12 @@ async def create_subscriber(
 
 @router.put("/{id}", response_model=SubscriberResponseSchema)
 async def update_subscriber(
-    id: str, 
-    subscriber: SubscriberRequestSchema, 
+    id: str,
+    subscriber: SubscriberRequestSchema,
     database: str = Depends(get_database),
-    current_user: Subscriber = Depends(get_current_user)
+    current_user: Subscriber = Depends(get_current_user),
 ):
-    """Update subscriber
-    """
+    """Update subscriber"""
     if current_user.id != id:
         raise UnauthorizedException("Unauthorized to update account")
     return await SubscriberService(database).update(id, subscriber)
@@ -89,35 +88,37 @@ async def update_subscriber(
 
 @router.delete("/{id}", response_class=JSONResponse)
 async def delete_subscriber(
-    id: str, 
+    id: str,
     database: str = Depends(get_database),
-    current_user: Subscriber = Depends(get_admin_user)
-    ):
+    current_user: Subscriber = Depends(get_admin_user),
+):
     """Delete subscriber"""
     await SubscriberService(database).delete(id)
     return JSONResponse(
         status_code=status.HTTP_200_OK, content={"message": "Subscriber deleted"}
     )
 
+
 @router.post("/{id}/providers/{provider_id}", response_model=SubscriberResponseSchema)
 async def follow_provider(
-    id: str, 
-    provider_id: str, 
+    id: str,
+    provider_id: str,
     database: str = Depends(get_database),
-    current_user: Subscriber = Depends(get_current_user)
-    ):
+    current_user: Subscriber = Depends(get_current_user),
+):
     """Add provider to subscriber"""
     if current_user.id != id:
         raise UnauthorizedException("Unauthorized to update account")
     return await SubscriberService(database).provider_follow(id, provider_id)
 
+
 @router.delete("/{id}/providers/{provider_id}", response_model=SubscriberResponseSchema)
 async def unfollow_provider(
-    id: str, 
-    provider_id: str, 
+    id: str,
+    provider_id: str,
     database: str = Depends(get_database),
-    current_user: Subscriber = Depends(get_current_user)
-    ):
+    current_user: Subscriber = Depends(get_current_user),
+):
     """Remove provider from subscriber"""
     if current_user.id != id:
         raise UnauthorizedException("Unauthorized to update account")

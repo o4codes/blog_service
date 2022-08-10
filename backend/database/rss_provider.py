@@ -39,7 +39,7 @@ class RssProviderDatabase:
         """
         return await self.collection.count_documents(query)
 
-    async def get_by_id(self, provider_id: str) -> Union[RssProvider,None]:
+    async def get_by_id(self, provider_id: str) -> Union[RssProvider, None]:
         """
         Gets a rss provider by id
 
