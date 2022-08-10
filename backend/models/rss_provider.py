@@ -1,6 +1,7 @@
 from bson import ObjectId
 from models.utils.custom_type import PyObjectId
 from pydantic import AnyUrl, BaseModel, EmailStr, Field
+from datetime import datetime
 
 
 class RssProvider(BaseModel):
@@ -11,6 +12,7 @@ class RssProvider(BaseModel):
     title: str
     description: str
     image: AnyUrl
+    last_feed_time: datetime = None
 
     class Config:
         allow_population_by_field_name = True

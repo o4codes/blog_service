@@ -1,6 +1,7 @@
 import aiohttp
 import feedparser
 from core.exceptions import BadRequest
+from dateutil import parser
 
 
 class RSSUtils:
@@ -44,7 +45,7 @@ class RSSUtils:
         rss_item_data["title"] = rss_item.title
         rss_item_data["link"] = rss_item.link
         rss_item_data["description"] = rss_item.description
-        rss_item_data["published"] = rss_item.published
+        rss_item_data["published_date"] = parser.parse(rss_item.published)
         return rss_item_data
 
     async def get_rss_items(self) -> list:

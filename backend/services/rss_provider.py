@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from database.rss_provider import RssProviderDatabase
@@ -105,6 +106,26 @@ class RssProviderService:
         rss_provider = await self.rss_provider_db.get_by_id(id)
         if rss_provider:
             rss_provider.url = url
+            rss_provider = await self.rss_provider_db.update(rss_provider)
+            return rss_provider
+        raise NotFoundException(f"Rss provider with id {id} not found")
+
+    async def update_last_feed_time(
+        self, id: str, last_feed_time: datetime
+    ) -> RssProvider:
+        """
+        Updates last feed time of rss provider
+
+        Args:
+            id (str): id of rss provider
+            last_feed_time (datetime): last feed time of rss provider
+
+        Returns:
+            RssProvider: rss provider
+        """
+        rss_provider = await self.rss_provider_db.get_by_id(id)
+        if rss_provider:
+            rss_provider.last_feed_time = last_feed_time
             rss_provider = await self.rss_provider_db.update(rss_provider)
             return rss_provider
         raise NotFoundException(f"Rss provider with id {id} not found")

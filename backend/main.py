@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from middlewares.error_handler import ErrorHandlerMiddleware
 from core.config import settings
 from application.routers import rss_provider, subscriber, rss_feed, auth
+from services.feeds_scheduler import feed_scheduler, FeedScheduler
 
 
 app = FastAPI(
@@ -28,6 +29,16 @@ app.include_router(subscriber.router, prefix=settings.API_V1_STR)
 app.include_router(rss_provider.router, prefix=settings.API_V1_STR)
 app.include_router(rss_feed.router, prefix=settings.API_V1_STR)
 app.include_router(auth.router, prefix=settings.API_V1_STR)
+
+
+@app.on_event("startup")
+async def startup():
+    feed_scheduler.start(func=FeedScheduler.job_init_func)
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    feed_scheduler.shutdown()
 
 
 @app.get("/api/v1/ping")
