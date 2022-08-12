@@ -54,6 +54,6 @@ async def ping():
 # mounts frontend folder to project
 app.mount(
     "/",
-    StaticFiles(directory="../frontend", html=True, check_dir=False),
+    StaticFiles(directory="../frontend/dist", html=True, check_dir=False),
     name="static",
 )
